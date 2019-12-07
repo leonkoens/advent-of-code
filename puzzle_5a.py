@@ -1,5 +1,4 @@
 import copy
-import sys
 
 content = None
 
@@ -47,13 +46,9 @@ class Computer:
                 print(">>", opcodes[opcodes[pointer + 1]])
                 pointer += 2
 
-            else:
-                import pdb; pdb.set_trace()
-
         return opcodes[0]
 
     def add(self, param_modes, params, opcodes):
-        print("ADD", param_modes)
 
         if param_modes[-1] == 0:
             first = opcodes[params[0]]
@@ -70,7 +65,6 @@ class Computer:
         return opcodes
 
     def multiply(self, param_modes, params, opcodes):
-        print("MULTIPLY")
 
         if param_modes[-1] == 0:
             first = opcodes[params[0]]
@@ -91,4 +85,3 @@ opcodes = [int(x) for x in content[0].split(',')]
 computer = Computer(opcodes)
 
 computer.run(1)
-

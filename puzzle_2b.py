@@ -1,5 +1,4 @@
 import copy
-import math
 import sys
 
 content = None
@@ -35,9 +34,6 @@ class Computer:
 
             elif opcodes[pointer] == 2:
                 value = opcodes[opcodes[pointer+1]] * opcodes[opcodes[pointer+2]]
-
-            else:
-                import pdb; pdb.set_trace()
 
             opcodes[index] = value
             pointer += 4

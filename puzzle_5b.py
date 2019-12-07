@@ -1,12 +1,8 @@
-import copy
-import sys
 
 content = None
 
 with open('input_5.txt', 'r') as handle:
     content = handle.readlines()
-
-#content = '3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99'
 
 
 def log(msg):
@@ -59,9 +55,6 @@ class Computer:
 
             elif instruction == 8:
                 self.equals(param_modes)
-
-            else:
-                import pdb; pdb.set_trace()
 
         return self.opcodes[0]
 
@@ -147,11 +140,6 @@ class Computer:
 
 
 opcodes = [int(x) for x in content[0].split(',')]
-#opcodes = [int(x) for x in content.split(',')]
 
 computer = Computer(opcodes)
 computer.run(5)
-
-#for i in range(10):
-#    computer.run(i)
-

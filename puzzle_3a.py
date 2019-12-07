@@ -32,9 +32,6 @@ for update in first.split(','):
     elif direction == 'D':
         new_location = (0, -1)
 
-    else:
-        import pbd;pdb.set_trace()
-
     for _ in range(length):
         location[0] += new_location[0]
         location[1] += new_location[1]
@@ -62,9 +59,6 @@ for update in second.split(','):
 
     elif direction == 'D':
         new_location = (0, -1)
-
-    else:
-        import pbd;pdb.set_trace()
 
     for _ in range(length):
         location[0] += new_location[0]

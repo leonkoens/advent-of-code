@@ -3,7 +3,7 @@ import math
 
 content = None
 
-with open('input1.txt', 'r') as handle:
+with open('input_1.txt', 'r') as handle:
     content = handle.readlines()
 
 fuel = 0

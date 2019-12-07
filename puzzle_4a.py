@@ -32,8 +32,6 @@ while True:
 
     check = int("".join(numbers))
 
-    #import pdb;pdb.set_trace()
-
     if check > end:
         break
 

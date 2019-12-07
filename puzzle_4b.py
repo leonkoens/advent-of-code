@@ -38,5 +38,3 @@ while True:
 
 
 print(total)
-
-
