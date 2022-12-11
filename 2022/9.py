@@ -1,7 +1,9 @@
 
+filename = '9.txt'
+#filename = 'aoc_2022_day09_large-1.in'
+
 content = None
-with open('9.txt', 'r') as handle:
-    content = handle.readlines()
+handle = open(filename, 'r')
 
 
 #content = """
@@ -31,8 +33,8 @@ grid_map_2 = {}
 snake_length = 10
 snake = [[0, 0] for i in range(snake_length)]
 
-for line in content:
-    direction, steps = line.split(' ')
+for direction in handle:
+    direction, steps = direction.split(' ')
 
     for i in range(int(steps)):
 
@@ -50,12 +52,15 @@ for line in content:
             x_diff = snake[j][0] - snake[j-1][0]
             y_diff = snake[j][1] - snake[j-1][1]
 
-            if abs(x_diff) == 2 and abs(y_diff) == 2 or abs(x_diff) == 2 and abs(y_diff) == 1 or abs(y_diff) == 2 and abs(x_diff) == 1:
+            x_diff_abs = abs(x_diff)
+            y_diff_abs = abs(y_diff)
+
+            if x_diff_abs == 2 and y_diff_abs == 2 or x_diff_abs == 2 and y_diff_abs == 1 or y_diff_abs == 2 and x_diff_abs == 1:
                 snake[j][0] = snake[j][0] + 1 if x_diff < 0 else snake[j][0] - 1
                 snake[j][1] = snake[j][1] + 1 if y_diff < 0 else snake[j][1] - 1
-            elif abs(x_diff) == 2:
+            elif x_diff_abs == 2:
                 snake[j][0] = snake[j][0] + 1 if x_diff < 0 else snake[j][0] - 1
-            elif abs(y_diff) == 2:
+            elif y_diff_abs == 2:
                 snake[j][1] = snake[j][1] + 1 if y_diff < 0 else snake[j][1] - 1
 
         grid_map_1[snake[1][0], snake[1][1]] = 1
