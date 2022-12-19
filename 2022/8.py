@@ -71,10 +71,11 @@ for i in range(size+1):
 
     for j in range(size+1):
 
+        scenic_max = max(scenic_max, scenic_score(i, j))
+
         if grid[i][j] > a:
             grid_map[(i, j)] = 1
             a = grid[i][j]
-            scenic_max = max(scenic_max, scenic_score(i, j))
 
         if grid[j][i] > b:
             grid_map[(j, i)] = 1
