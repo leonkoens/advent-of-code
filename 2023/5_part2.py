@@ -1,10 +1,11 @@
+import copy
 from dataclasses import dataclass
 import re
 
 
 content = None
-with open('5_test.txt', 'r') as handle:
-#with open('5.txt', 'r') as handle:
+#with open('5_test.txt', 'r') as handle:
+with open('5.txt', 'r') as handle:
     content = handle.readlines()
 
 
@@ -47,19 +48,17 @@ class AdventOfCode:
                 continue
             
             drs, srs, r = map(int, line.split(' '))
-            category_map[source][(srs, srs+r)] = srs, drs, srs+r, drs+r
+            category_map[source][(srs, srs+r)] = srs, srs+r, drs, drs+r
                 
         lowest = 9999999999999999999
 
-        seeds = sorted(seeds, key=lambda x: x[0])
+        #seeds = sorted(seeds, key=lambda x: x[0])
 
         def resolve(start, end, categories):
 
             print(f'Resolving {start} {end} {categories}')
-            print(f'>range {end-start}')
 
-            old_start = start
-            old_end = end
+            categories = copy.deepcopy(categories)
 
             try:
                 category = categories.pop(0)
@@ -67,61 +66,64 @@ class AdventOfCode:
                 print(start, end, categories)
                 return start
 
-            for cr in category_map[category].keys():
-
-                source_start = cr[0]
-                source_end = cr[1]
-
-                ss, ds, se, de = category_map[category][cr]
+            for ss, se, ds, de in category_map[category].values():
 
                 print(f'>checking {ss} - {se}')
 
-                if source_start <= start < source_end:
+                # Source completely in range
+                if ss <= start <= se and ss <= end <= se:
+                    # ss              se
+                    # [....|-----|....]
+                    print(f'>fits completely in {ss} {se}')
 
                     new_start = start - ss + ds
-
-                    if source_start < end <= source_end:
-                        print(f'>fits completely in {ss} {se}')
-
-                        new_end = end - ss + ds
-
-                        print(f'>New start end {new_start} {new_end}')
-                        print(f'>range {new_end-new_start}')
-
-                        return resolve(new_start, new_end, categories)
-
-                    else:
-                        # End outside this range, resolve the 2 parts
-
-                        print(f'>end outside {cr[0]} {cr[1]}')
-
-                        r = se - start
-
-                        return min(
-                            # Part outside
-                            resolve(se+1, end, [category] + categories),
-                            # Part inside
-                            resolve(new_start, de, categories)
-                        )
-
-                if ss < end <= se:
-
                     new_end = end - ss + ds
 
-                    print(f'>end inside, start outside {cr[0]} {cr[1]}')
+                    print(f'>New start end {new_start} {new_end}')
+                    print(f'>range {new_end-new_start}')
+
+                    return resolve(new_start, new_end, categories)
+
+                # Source end in range
+                if ss <= end <= se:
+                    #         ss        se
+                    # |-------[----|....]
+
+                    new_end = end - ss + ds
+                    print(f'>end inside {ss} {se}')
 
                     return min(
+                        # Part inside
                         resolve(ds, new_end, categories),
-                        resolve(start, ss-1, [category] + categories)
+                        # Part outside
+                        resolve(start, ss-1, [category] + categories),
+                    )
+
+                # Source start in range
+                if ss <= start <= se:
+                    # ss        se
+                    # [....|----]----|
+
+                    new_start = start - ss + ds
+                    print(f'>start inside {ss} {se}')
+
+                    return min(
+                        # Part inside
+                        resolve(new_start, de, categories),
+                        # Part outside
+                        resolve(se+1, end, [category] + categories)
                     )
                 
+                # Range in source
                 if ss > start and se < end:
-                    print(f'>range inside {cr[0]} {cr[1]}')
+                    #     ss      se
+                    # |---[.......]----|
+                    print(f'>range inside {ss} {se}')
 
                     return min(
-                        resolve(start, ss, [category] + categories),
+                        resolve(start, ss-1, [category] + categories),
                         resolve(ds, de, categories),
-                        resolve(se, end, [category] + categories),
+                        resolve(se+1, end, [category] + categories),
                     )
             
             return resolve(start, end, categories)
