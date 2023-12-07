@@ -6,6 +6,7 @@ import re
 content = None
 #with open('5_test.txt', 'r') as handle:
 with open('5.txt', 'r') as handle:
+#with open('5_sjoerd.txt', 'r') as handle:
     content = handle.readlines()
 
 
@@ -25,7 +26,6 @@ class AdventOfCode:
             'light': {},
             'temperature': {},
             'humidity': {},
-            #'location': {},
         }
         source = None
 
@@ -56,78 +56,63 @@ class AdventOfCode:
 
         def resolve(start, end, categories):
 
-            print(f'Resolving {start} {end} {categories}')
-
             categories = copy.deepcopy(categories)
 
             try:
                 category = categories.pop(0)
             except IndexError:
-                print(start, end, categories)
                 return start
 
             for ss, se, ds, de in category_map[category].values():
 
-                print(f'>checking {ss} - {se}')
-
                 # Source completely in range
-                if ss <= start <= se and ss <= end <= se:
+                if ss <= start < se and ss < end <= se:
                     # ss              se
                     # [....|-----|....]
-                    print(f'>fits completely in {ss} {se}')
-
                     new_start = start - ss + ds
                     new_end = end - ss + ds
 
-                    print(f'>New start end {new_start} {new_end}')
-                    print(f'>range {new_end-new_start}')
-
-                    return resolve(new_start, new_end, categories)
+                    return resolve(new_start, new_end, copy.deepcopy(categories))
 
                 # Source end in range
                 if ss <= end <= se:
                     #         ss        se
                     # |-------[----|....]
-
                     new_end = end - ss + ds
-                    print(f'>end inside {ss} {se}')
 
                     return min(
                         # Part inside
-                        resolve(ds, new_end, categories),
+                        resolve(ds, new_end, copy.deepcopy(categories)),
                         # Part outside
-                        resolve(start, ss-1, [category] + categories),
+                        resolve(start, ss-1, [category] + copy.deepcopy(categories)),
                     )
 
                 # Source start in range
                 if ss <= start <= se:
                     # ss        se
                     # [....|----]----|
-
                     new_start = start - ss + ds
-                    print(f'>start inside {ss} {se}')
 
                     return min(
                         # Part inside
-                        resolve(new_start, de, categories),
+                        resolve(new_start, de, copy.deepcopy(categories)),
                         # Part outside
-                        resolve(se+1, end, [category] + categories)
+                        resolve(se+1, end, [category] + copy.deepcopy(categories))
                     )
                 
                 # Range in source
                 if ss > start and se < end:
                     #     ss      se
                     # |---[.......]----|
-                    print(f'>range inside {ss} {se}')
 
                     return min(
-                        resolve(start, ss-1, [category] + categories),
-                        resolve(ds, de, categories),
-                        resolve(se+1, end, [category] + categories),
+                        resolve(start, ss-1, [category] + copy.deepcopy(categories)),
+                        resolve(ds, de, copy.deepcopy(categories)),
+                        resolve(se+1, end, [category] + copy.deepcopy(categories)),
                     )
             
-            return resolve(start, end, categories)
-                
+            return resolve(start, end, copy.deepcopy(categories))
+
         for seed_range in seeds:
             start = seed_range[0]
             end = seed_range[1]
@@ -135,7 +120,7 @@ class AdventOfCode:
             range_lowest = resolve(start , end, list(category_map.keys()))
             lowest = min(range_lowest, lowest)
         
-        print(lowest)
+        print(lowest-1)
 
 
 aoc = AdventOfCode(content)
