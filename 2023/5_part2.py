@@ -72,7 +72,7 @@ class AdventOfCode:
                     new_start = start - ss + ds
                     new_end = end - ss + ds
 
-                    return resolve(new_start, new_end, copy.deepcopy(categories))
+                    return resolve(new_start, new_end, categories)
 
                 # Source end in range
                 if ss <= end <= se:
@@ -82,9 +82,9 @@ class AdventOfCode:
 
                     return min(
                         # Part inside
-                        resolve(ds, new_end, copy.deepcopy(categories)),
+                        resolve(ds, new_end, categories),
                         # Part outside
-                        resolve(start, ss-1, [category] + copy.deepcopy(categories)),
+                        resolve(start, ss-1, [category] + categories),
                     )
 
                 # Source start in range
@@ -95,9 +95,9 @@ class AdventOfCode:
 
                     return min(
                         # Part inside
-                        resolve(new_start, de, copy.deepcopy(categories)),
+                        resolve(new_start, de, categories),
                         # Part outside
-                        resolve(se+1, end, [category] + copy.deepcopy(categories))
+                        resolve(se+1, end, [category] + categories)
                     )
                 
                 # Range in source
@@ -106,12 +106,12 @@ class AdventOfCode:
                     # |---[.......]----|
 
                     return min(
-                        resolve(start, ss-1, [category] + copy.deepcopy(categories)),
-                        resolve(ds, de, copy.deepcopy(categories)),
-                        resolve(se+1, end, [category] + copy.deepcopy(categories)),
+                        resolve(start, ss-1, [category] + categories),
+                        resolve(ds, de, categories),
+                        resolve(se+1, end, [category] + categories),
                     )
             
-            return resolve(start, end, copy.deepcopy(categories))
+            return resolve(start, end, categories)
 
         for seed_range in seeds:
             start = seed_range[0]
